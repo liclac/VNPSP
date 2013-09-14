@@ -1,3 +1,0 @@
-[submodule "lib/oslib"]
-	path = lib/oslib
-	url = git@github.com:dogo/oslibmodv2.git
