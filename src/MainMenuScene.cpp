@@ -106,7 +106,7 @@ void MainMenuScene::draw()
 	
 	if(novels.size() == 0)
 	{
-		const char *text = "No Novels";
+		static const char *text = "No Novels";
 		int width = oslGetStringWidth(text);
 		int height = listFont->charHeight;
 		
@@ -114,25 +114,24 @@ void MainMenuScene::draw()
 	}
 	else
 	{
+		static const int leftMargin = 10;
+		static const int yCenter = (SCREEN_HEIGHT - MAIN_MENU_ROW_HEIGHT)/2;
+		static const int rowOffset = (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN);
+		
 		// Previous novels...
 		if(selectedIndex >= 2)
-			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) - (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*2,
-				novels[selectedIndex-2], false);
+			this->drawListItem(leftMargin, yCenter - rowOffset*2, novels[selectedIndex-2], false);
 		if(selectedIndex >= 1)
-			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) - (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*1,
-				novels[selectedIndex-1], false);
+			this->drawListItem(leftMargin, yCenter - rowOffset*1, novels[selectedIndex-1], false);
 		
 		// ...selected novel...
-		this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2),
-			novels[selectedIndex], true);
+		this->drawListItem(leftMargin, yCenter, novels[selectedIndex], true);
 		
 		// ...and the next ones.
 		if(selectedIndex < novels.size()-1)
-			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) + (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*1,
-				novels[selectedIndex+1], false);
+			this->drawListItem(leftMargin, yCenter + rowOffset*1, novels[selectedIndex+1], false);
 		if(selectedIndex < novels.size()-2)
-			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) + (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*2,
-				novels[selectedIndex+2], false);
+			this->drawListItem(leftMargin, yCenter + rowOffset*2, novels[selectedIndex+2], false);
 	}
 }
 
