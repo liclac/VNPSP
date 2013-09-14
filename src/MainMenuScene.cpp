@@ -28,7 +28,7 @@ MainMenuScene::~MainMenuScene()
 void MainMenuScene::loadNovels()
 {
 	// Open the novel directory for reading...
-	std::string novelsPath = "ms0:/novels/";
+	std::string novelsPath = NOVELS_PATH;
 	SceUID dfd = sceIoDopen(novelsPath.c_str());
 	
 	// Create a zeroed reserved space for entries.
@@ -104,17 +104,36 @@ void MainMenuScene::draw()
 {
 	oslSetFont(listFont);
 	
-	if(selectedIndex >= 2)
-		this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) - (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*2, novels[selectedIndex-2], false);
-	if(selectedIndex >= 1)
-		this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) - (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*1, novels[selectedIndex-1], false);
-	
-	this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2), novels[selectedIndex], true);
-	
-	if(selectedIndex < novels.size()-1)
-		this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) + (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*1, novels[selectedIndex+1], false);
-	if(selectedIndex < novels.size()-2)
-		this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) + (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*2, novels[selectedIndex+2], false);
+	if(novels.size() == 0)
+	{
+		const char *text = "No Novels";
+		int width = oslGetStringWidth(text);
+		int height = listFont->charHeight;
+		
+		oslDrawString((SCREEN_WIDTH - width)/2, (SCREEN_HEIGHT - height)/2, text);
+	}
+	else
+	{
+		// Previous novels...
+		if(selectedIndex >= 2)
+			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) - (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*2,
+				novels[selectedIndex-2], false);
+		if(selectedIndex >= 1)
+			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) - (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*1,
+				novels[selectedIndex-1], false);
+		
+		// ...selected novel...
+		this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2),
+			novels[selectedIndex], true);
+		
+		// ...and the next ones.
+		if(selectedIndex < novels.size()-1)
+			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) + (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*1,
+				novels[selectedIndex+1], false);
+		if(selectedIndex < novels.size()-2)
+			this->drawListItem(10, (272/2) - (MAIN_MENU_ROW_HEIGHT/2) + (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN)*2,
+				novels[selectedIndex+2], false);
+	}
 }
 
 void MainMenuScene::drawListItem(int x, int y, Novel *novel, bool selected)
@@ -127,5 +146,6 @@ void MainMenuScene::drawListItem(int x, int y, Novel *novel, bool selected)
 	// selected title, but drawing it everywhere looks better IMO.
 	// Note that text is vertically centered, so you need to add
 	// half the character height to y to make it look right.
-	oslDrawString(x + MAIN_MENU_IMAGE_WIDTH + MAIN_MENU_IMAGE_MARGIN, y + (MAIN_MENU_ROW_HEIGHT/2) - (listFont->charHeight/2), novel->info["title"].c_str());
+	oslDrawString(x + MAIN_MENU_IMAGE_WIDTH + MAIN_MENU_IMAGE_MARGIN, y + (MAIN_MENU_ROW_HEIGHT/2) - (listFont->charHeight/2),
+		novel->info["title"].c_str());
 }

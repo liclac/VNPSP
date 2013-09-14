@@ -7,6 +7,14 @@
 #define USE_KERNEL_MODE 0	//< Run in Kernel Mode?
 #define VERSION_MAJOR 0		//< Major Version
 #define VERSION_MINOR 1		//< Minor Version
+ 
+ #define NOVELS_PATH "ms0:/novels/"
+
+/*
+ * -- Hardware Info
+ */
+#define SCREEN_HEIGHT 272
+#define SCREEN_WIDTH 480
 
 /*
  * -- Font Paths
