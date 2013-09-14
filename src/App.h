@@ -1,8 +1,9 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include <deque>
 #include <map>
-#include "ControllerSystem.h"
+#include "Scene.h"
 
 namespace VNPSP
 {
@@ -15,17 +16,14 @@ namespace VNPSP
 		App();
 		~App();
 		
-		//
-		// -- Subsystems
-		//
-		ControllerSystem *ctrl;		///< Controller Subsystem
-		
-		
-		
-		/**
-		 * 
-		 */
 		void run();
+		void push(Scene *scene);
+		void pop();
+		
+	protected:
+		void initOSL();
+		
+		std::deque<Scene*> sceneStack;
 	};
 }
 
