@@ -24,17 +24,23 @@ Script::~Script()
 
 void Script::next(bool skipping)
 {
-	if(pos >= commands.size())
+	bool cont = false;
+	do
 	{
-		std::cout << "-- Reached the end of the script!" << std::endl;
-	}
-	else
-	{
-		std::cout << "-- Executing Command " << pos << " of " << commands.size() << "..." << std::endl;
-		Command *cmd = commands.at(pos);
-		cmd->exec(skipping);
-		++pos;
-	}
+		cont = false;
+		
+		if(pos >= commands.size())
+		{
+			std::cout << "-- Reached the end of the script!" << std::endl;
+		}
+		else
+		{
+			std::cout << "-- Executing Command " << pos << " of " << commands.size() << "..." << std::endl;
+			Command *cmd = commands.at(pos);
+			cont = cmd->exec(skipping);
+			++pos;
+		}
+	} while(cont);
 }
 
 void Script::load(std::string filename)

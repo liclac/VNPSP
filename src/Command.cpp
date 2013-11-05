@@ -22,9 +22,10 @@ UnknownCommand::UnknownCommand(Script *script, char *line):
 
 UnknownCommand::~UnknownCommand() {}
 
-void UnknownCommand::exec(bool skipping)
+bool UnknownCommand::exec(bool skipping)
 {
 	this->script->scene->pushLine(std::string("<< ") + line + std::string(" >>"), GameScene::LineTypeSystem);
+	return true;
 }
 
 // 
@@ -39,9 +40,10 @@ TextCommand::TextCommand(Script *script, char *remainingLine):
 
 TextCommand::~TextCommand() { }
 
-void TextCommand::exec(bool skipping)
+bool TextCommand::exec(bool skipping)
 {
 	this->script->scene->pushLine(text);
+	return false;
 }
 
 // 
@@ -56,7 +58,7 @@ BgLoadCommand::BgLoadCommand(Script *script, char *remainingLine):
 
 BgLoadCommand::~BgLoadCommand() { }
 
-void BgLoadCommand::exec(bool skipping)
+bool BgLoadCommand::exec(bool skipping)
 {
-	
+	return true;
 }

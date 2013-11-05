@@ -13,7 +13,7 @@ namespace VNPSP
 		// Feel free to strtok it or whatever, just don't store it.
 		Command(Script *script, char *remaining);
 		virtual ~Command();
-		virtual void exec(bool skipping) = 0;
+		virtual bool exec(bool skipping) = 0;
 		
 		Script *script;
 	};
@@ -26,7 +26,7 @@ namespace VNPSP
 	public:
 		UnknownCommand(Script *script, char *line);
 		virtual ~UnknownCommand();
-		virtual void exec(bool skipping);
+		virtual bool exec(bool skipping);
 		
 	protected:
 		std::string line;
@@ -40,7 +40,7 @@ namespace VNPSP
 	public:
 		TextCommand(Script *script, char *remaining);
 		virtual ~TextCommand();
-		virtual void exec(bool skipping);
+		virtual bool exec(bool skipping);
 		
 	protected:
 		std::string text;
@@ -54,7 +54,7 @@ namespace VNPSP
 	public:
 		BgLoadCommand(Script *script, char *remaining);
 		virtual ~BgLoadCommand();
-		virtual void exec(bool skipping);
+		virtual bool exec(bool skipping);
 		
 	protected:
 		std::string filename;
