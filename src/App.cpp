@@ -50,7 +50,7 @@ void App::initOSL()
 	oslInitGfx(OSL_PF_5650, true);
 	
 	// -- Fonts
-	oslIntraFontInit(INTRAFONT_CACHE_MED);
+	oslIntraFontInit(INTRAFONT_CACHE_ASCII);
 	
 	// -- Synchronization
 	oslSetFrameskip(1);
@@ -131,5 +131,6 @@ void App::push(Scene *scene)
 
 void App::pop()
 {
+	delete *(this->sceneStack.end());
 	this->sceneStack.pop_back();
 }

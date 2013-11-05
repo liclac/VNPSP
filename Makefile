@@ -1,9 +1,10 @@
 TARGET = vnpsp
 OBJS   = src/main.o src/App.o src/Scene.o src/Novel.o \
-			src/MainMenuScene.o
+			src/Script.o src/Command.o \
+			src/MainMenuScene.o src/GameScene.o
 
 INCDIR   = lib
-CFLAGS   = -G0 -Wall -O2
+CFLAGS   = -G0 -Wall -O2 -ggdb
 CXXFLAGS = $(CFLAGS) -fno-rtti
 ASFLAGS  = $(CFLAGS)
 

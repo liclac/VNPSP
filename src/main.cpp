@@ -13,6 +13,7 @@ int main()
 {
 	App *app = new App();
 	app->run();
+	delete app;
 	
 	sceKernelExitGame();
 	return 0;

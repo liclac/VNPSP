@@ -1,8 +1,12 @@
 #include "MainMenuScene.h"
+
 #include <sstream>
 #include <pspiofilemgr.h>
+
 #include "common.h"
+#include "App.h"
 #include "Novel.h"
+#include "GameScene.h"
 
 using namespace VNPSP;
 
@@ -80,15 +84,26 @@ void MainMenuScene::loadNovels()
 
 void MainMenuScene::loadUIResources()
 {
+	// Load the default font and set it to be used.
+	// The styles are all defaults, but it's better to be overly specific than
+	// to be vague and get trouble with implicit behavior later on.
 	listFont = oslLoadFontFile(FONT_PATH_BIG_SANS);
-	// These are all defaults, but it's better to be overly
-	// specific than to get trouble with implicit behavior
 	oslIntraFontSetStyle(listFont, 1, RGBA(255,255,255,255), RGBA(0,0,0,255), INTRAFONT_ALIGN_LEFT);
+	oslSetFont(listFont);
 }
 
 void MainMenuScene::tick()
 {
-	if(osl_pad.pressed.up)
+	if(novels.size() == 0)
+		return;
+	
+	if(osl_pad.pressed.cross)
+	{
+		Novel *selectedNovel = novels.at(selectedIndex);
+		GameScene *gameScene = new GameScene(m_app, selectedNovel);
+		this->m_app->push(gameScene);
+	}
+	else if(osl_pad.pressed.up)
 	{
 		if(selectedIndex > 0) selectedIndex--;
 		else selectedIndex = novels.size()-1;
@@ -102,7 +117,6 @@ void MainMenuScene::tick()
 
 void MainMenuScene::draw()
 {
-	oslSetFont(listFont);
 	
 	if(novels.size() == 0)
 	{
@@ -139,7 +153,10 @@ void MainMenuScene::drawListItem(int x, int y, Novel *novel, bool selected)
 {
 	// Draw a black square instead of the thumbnail until I figure
 	// out why libpng refuses to load them...
-	oslDrawFillRect(x, y, x + MAIN_MENU_IMAGE_WIDTH, y + MAIN_MENU_ROW_HEIGHT, RGB(0,0,0));
+	//oslDrawFillRect(x, y, x + MAIN_MENU_IMAGE_WIDTH, y + MAIN_MENU_ROW_HEIGHT, RGB(0,0,0));
+	
+	// TODO: Scale incorrectly sized images
+	oslDrawImageXY(novel->thumbnail(), x, y);
 	
 	// And draw the title alongside it; the XMB only draws it on the
 	// selected title, but drawing it everywhere looks better IMO.
