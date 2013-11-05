@@ -6,21 +6,36 @@
 namespace VNPSP
 {
 	class Script;
+	
+	/**
+	 * Abstract base class for all commands.
+	 */
 	class Command
 	{
 	public:
-		// Note: 'remaining' is never used anywhere else ever again.
-		// Feel free to strtok it or whatever, just don't store it.
+		/// Standard Constructor
+		/// 
+		/// Note: 'remaining' is a copy of the command line, offset past the
+		/// command name. This is freed shortly after the command is initalized
+		/// and never used by anything else, so feel free to strtok() it or
+		/// whatever. Just don't store it - it'll be deallocated shortly.
+		/// 
+		/// @param script The script the command belongs to
+		/// @param remaining The remainder of the string
 		Command(Script *script, char *remaining);
+		
+		/// Destructor
 		virtual ~Command();
+		
+		/// Executes the command (implemented by subclasses)
 		virtual bool exec(bool skipping) = 0;
 		
+		/// The script the command belongs to
 		Script *script;
 	};
 	
-	/**
-	 * An unknown command; note that the second param gets the FULL LINE.
-	 */
+	/// Concrete representation of an unrecognized command.
+	/// Note: the second constructor parameter gets the full line!
 	class UnknownCommand : public Command
 	{
 	public:
@@ -29,12 +44,10 @@ namespace VNPSP
 		virtual bool exec(bool skipping);
 		
 	protected:
-		std::string line;
+		std::string line;		///< The unrecognized line
 	};
 	
-	/**
-	 * Concrete representation of the 'text' command.
-	 */
+	/// Concrete representation of the 'text' command.
 	class TextCommand : public Command
 	{
 	public:
@@ -43,12 +56,10 @@ namespace VNPSP
 		virtual bool exec(bool skipping);
 		
 	protected:
-		std::string text;
+		std::string text;		///< The text
 	};
 	
-	/**
-	 * Concrete representation of the 'bgload' command.
-	 */
+	/// Concrete representation of the 'bgload' command.
 	class BgLoadCommand : public Command
 	{
 	public:
@@ -57,7 +68,7 @@ namespace VNPSP
 		virtual bool exec(bool skipping);
 		
 	protected:
-		std::string filename;
+		std::string filename;	///< The filename of the image to load
 	};
 }
 
