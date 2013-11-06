@@ -59,6 +59,18 @@ namespace VNPSP
 		std::string text;		///< The text
 	};
 	
+	/// Concrete representation of the 'cleartext' command.
+	class ClearTextCommand : public Command
+	{
+	public:
+		ClearTextCommand(Script *script, char *remaining);
+		virtual ~ClearTextCommand();
+		virtual bool exec(bool skipping);
+		
+	protected:
+		bool hard;
+	};
+	
 	/// Concrete representation of the 'bgload' command.
 	class BgLoadCommand : public Command
 	{

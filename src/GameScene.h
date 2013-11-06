@@ -28,6 +28,8 @@ namespace VNPSP
 		/// Destructor
 		virtual ~GameScene();
 		
+		
+		
 		virtual void tick();
 		virtual void draw();
 		
@@ -39,6 +41,11 @@ namespace VNPSP
 		/// @param text The text to write out
 		/// @param type The type of the line
 		void pushLine(std::string text, LineType type = LineTypeText);
+		
+		/// Clears the text buffer
+		void clearBuffer();
+		
+		
 		
 		/// Loads a background image to replace the current one
 		/// @param filename Image filename (relative to '<novel>/background/')

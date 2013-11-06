@@ -47,6 +47,24 @@ bool TextCommand::exec(bool skipping)
 }
 
 // 
+// -- Clear Text
+// 
+ClearTextCommand::ClearTextCommand(Script *script, char *remainingLine):
+	Command(script, remainingLine),
+	hard(strncmp(remainingLine, "!", 1) == 0)
+{
+	
+}
+
+ClearTextCommand::~ClearTextCommand() { }
+
+bool ClearTextCommand::exec(bool skipping)
+{
+	this->script->scene->clearBuffer();
+	return true;
+}
+
+// 
 // -- BgLoad
 // 
 BgLoadCommand::BgLoadCommand(Script *script, char *remainingLine):

@@ -125,6 +125,11 @@ void GameScene::pushLine(std::string text, LineType type)
 	this->_pushLineActual("", LineTypePBreak);
 }
 
+void GameScene::clearBuffer()
+{
+	textBuffer.clear();
+}
+
 void GameScene::loadBackground(std::string filename)
 {
 	// Let the novel figure out where the image is.

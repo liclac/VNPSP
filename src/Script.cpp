@@ -76,6 +76,8 @@ void Script::load(std::string filename)
 		// Create a command object for each command we pass
 		if(strncmp("text", cLine, cmdLength) == 0)
 			commands.push_back(new TextCommand(this, remaining));
+		else if(strncmp("cleartext", cLine, cmdLength) == 0)
+			commands.push_back(new ClearTextCommand(this, remaining));
 		else if(strncmp("bgload", cLine, cmdLength) == 0)
 			commands.push_back(new BgLoadCommand(this, remaining));
 		// If we can't match it, make an UnknownCommand placeholder
