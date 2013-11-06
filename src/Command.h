@@ -57,6 +57,7 @@ namespace VNPSP
 		
 	protected:
 		std::string text;		///< The text
+		bool cont;				///< Continue to the next line right away?
 	};
 	
 	/// Concrete representation of the 'cleartext' command.
@@ -68,7 +69,7 @@ namespace VNPSP
 		virtual bool exec(bool skipping);
 		
 	protected:
-		bool hard;
+		bool hard;				///< Do a "hard" break (delete backlog)
 	};
 	
 	/// Concrete representation of the 'bgload' command.

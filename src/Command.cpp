@@ -32,10 +32,18 @@ bool UnknownCommand::exec(bool skipping)
 // -- Text
 // 
 TextCommand::TextCommand(Script *script, char *remainingLine):
-	Command(script, remainingLine),
-	text(remainingLine)
+	Command(script, remainingLine)
 {
-	
+	if(strncmp(remainingLine, "@", 1) == 0)
+	{
+		text = remainingLine + (size_t)1;
+		cont = true;
+	}
+	else
+	{
+		text = remainingLine;
+		cont = false;
+	}
 }
 
 TextCommand::~TextCommand() { }
@@ -43,7 +51,7 @@ TextCommand::~TextCommand() { }
 bool TextCommand::exec(bool skipping)
 {
 	this->script->scene->pushLine(text);
-	return false;
+	return cont;
 }
 
 // 
