@@ -10,5 +10,12 @@ Remember to clone submodules too!
 
 Usage
 -----
-Make a folder in `/GAME` on your memory card, and put the built EBOOT.PBP in it. Then make a folder called `/novels` and put a few VNDS novels in there. Fire VNPSP up and try to read something.  
-Note that archived directories (script.zip, background.zip, etc) are NOT currently supported, so you'll have to unzip them first.
+* Put the built EBOOT.PBP in `ms0:/PSP/GAME/VNPSP/`
+* Put a VN or a few in `ms0:/novels/`
+* Activate your CFW and fire up VNPSP
+
+It's that easy.
+
+**Note:**  
+A lot of VNs come partially zipped, as a directory containing a `background.zip`, a `sound.zip`, a `script.zip`, etc. This is not yet supported, and will fail to load.  
+For now, just extract the files - all files in `<novel>/script.zip` to `<novel>/script/`, etc.
