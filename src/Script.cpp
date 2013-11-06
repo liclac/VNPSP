@@ -58,7 +58,7 @@ void Script::load(std::string filename)
 	std::ifstream file(path.c_str());
 	
 	// Loop through the file line-by-line with getline()
-	// (I would do this with pure C, but the PSP lacks C getline())
+	// (I would do this with pure C, but the PSP SDK lacks C getline())
 	std::string line;
 	while(std::getline(file, line))
 	{

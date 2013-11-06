@@ -32,9 +32,17 @@ bool UnknownCommand::exec(bool skipping)
 // -- Text
 // 
 TextCommand::TextCommand(Script *script, char *remainingLine):
-	Command(script, remainingLine)
+	Command(script, remainingLine),
+	cont(false)
 {
-	if(strncmp(remainingLine, "@", 1) == 0)
+	// If the line begins with @, proceed to the next one right away.
+	// If it's ~, print a blank line and proceed to the next line.
+	// If it's !, print a blank line, but DON'T proceed to the next.
+	if(strcmp(remainingLine, "~") == 0)
+		cont = true;
+	else if(strcmp(remainingLine, "!") == 0)
+		cont = false;
+	else if(strncmp(remainingLine, "@", 1) == 0)
 	{
 		text = remainingLine + (size_t)1;
 		cont = true;
