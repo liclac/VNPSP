@@ -23,11 +23,10 @@ namespace VNPSP
 		/// @param script The script the command belongs to
 		/// @param remaining The remainder of the string
 		Command(Script *script, char *remaining);
-		
-		/// Destructor
 		virtual ~Command();
 		
 		/// Executes the command (implemented by subclasses)
+		/// @param skipping If we're currently fast-forwarding
 		virtual bool exec(bool skipping) = 0;
 		
 		/// The script the command belongs to

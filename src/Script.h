@@ -13,12 +13,13 @@ namespace VNPSP
 	{
 	public:
 		/// Normal Constructor
+		/// 
 		/// Initializes variables and calls load().
+		/// 
 		/// @param novel The novel the script belongs to
 		/// @param filename Script filename (relative to '<novel>/script/')
 		Script(Novel *novel, std::string filename);
 		
-		///Destructor.
 		virtual ~Script();
 		
 		/// Process the next command
