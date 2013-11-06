@@ -29,6 +29,9 @@ GameScene::GameScene(App *app, Novel *novel):
 	// Load the main script
 	script = new Script(novel, "main.scr");
 	script->scene = this;
+	
+	// Start!
+	script->next();
 }
 
 GameScene::~GameScene()
@@ -135,13 +138,20 @@ void GameScene::loadBackground(std::string filename)
 	// Load the new image (oslLoadImageFile and related take a char* instead
 	// of a const char* for some reason, so we need a writable copy)
 	char *pathDup = strdup(path.c_str());
-	background = oslLoadImageFile(pathDup, OSL_IN_VRAM, OSL_PF_5650);
+	OSL_IMAGE *bgSrc = oslLoadImageFile(pathDup, OSL_IN_RAM, OSL_PF_5650);
+	
+	// Scale it up to fit the screen
+	// (I gotta figure out the scale factor too...)
+	background = oslScaleImageCreate(bgSrc, OSL_IN_VRAM, SCREEN_WIDTH, SCREEN_HEIGHT, OSL_PF_5650);
+	
+	// Cleanup
+	oslDeleteImage(bgSrc);
 	free(pathDup);
 	
 	// Position it right at the center of the screen for now.
 	// I should probably resize it to fit instead...
-	background->x = (SCREEN_WIDTH - background->sizeX)/2;
-	background->y = (SCREEN_HEIGHT - background->sizeY)/2;
+	/*background->x = (SCREEN_WIDTH - background->sizeX)/2;
+	background->y = (SCREEN_HEIGHT - background->sizeY)/2;*/
 }
 
 void GameScene::_pushLineActual(std::string text, LineType type)

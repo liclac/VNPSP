@@ -60,5 +60,6 @@ BgLoadCommand::~BgLoadCommand() { }
 
 bool BgLoadCommand::exec(bool skipping)
 {
+	this->script->scene->loadBackground(this->filename);
 	return true;
 }
