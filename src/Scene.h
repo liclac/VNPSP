@@ -14,7 +14,8 @@ namespace VNPSP {
 		virtual void tick() = 0;
 		virtual void draw() = 0;
 		
-		virtual bool isOverlay() { return false; }
+		virtual bool passthroughDraw() { return false; }
+		virtual bool passthroughTick() { return false; }
 		
 	protected:
 		App *m_app;

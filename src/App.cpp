@@ -77,22 +77,37 @@ void App::run()
 		// Check the controller for new inputs; this updates osl_pad
 		oslReadKeys();
 		
-		// Loop through the scene stack backwards to update them
-		// This will stop once it finds something that /isn't/ an overlay (eg. isOverlay() returns false)
-		// because there's not much of a point in updating an invisible scene
-		// Store all the found Scenes in a deque so that we know what to draw later
+		// Loop through the scene stack backwards to update them and add them
+		// to a list of things to draw during the draw phase. Scenes can allow
+		// passthrough of draw and/or tick to ones below it in the stack, to
+		// allow for semi/transparent overlays with or without their own logic.
+		// Note: for performance, tick() calls are done top-down, while draw()
+		// calls are done bottom-up, otherwise overlays would be drawn over.
 		std::deque<Scene*> scenesToDraw;
+		bool tickStopHit = false;
+		bool drawStopHit = false;
 		for(unsigned int i = sceneStack.size() - 1; i >= 0; i--)
 		{
 			Scene *scene = sceneStack.at(i);
-			scene->tick();
+
+			// tick() scenes until we find one that won't allow passthrough
+			if(!tickStopHit)
+			{
+				scene->tick();
+				tickStopHit = !scene->passthroughTick();
+			}
 			
 			// Add to the front of the visible stack, since we're iterating backwards here,
 			// but forward during the draw phase (otherwise overlays would be drawn under things)
-			scenesToDraw.push_front(scene);
-			
-			// Break when we find something that isn't an overlay
-			if(!scene->isOverlay()) break;
+			if(!drawStopHit)
+			{
+				scenesToDraw.push_front(scene);
+				drawStopHit = !scene->passthroughDraw();
+			}
+
+			// No point in continuing if we've already hit both stops
+			if(tickStopHit && drawStopHit)
+				break;
 		}
 		
 		
@@ -102,8 +117,8 @@ void App::run()
 		// 
 		
 		// Drop the frame if the last one was in late, to avoid lag
-		
-		if(!lastFrameWasLate) {
+		if(!lastFrameWasLate)
+		{
 			oslStartDrawing();
 			oslClearScreen(RGB(128, 0, 0));
 			
