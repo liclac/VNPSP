@@ -3,7 +3,9 @@
 
 *.o
 *.elf
-*.sfo
-*.pbp
+*.SFO
+*.PBP
 *.prx
+*.sublime-project
+*.sublime-workspace
 
