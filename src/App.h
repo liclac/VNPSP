@@ -24,6 +24,7 @@ namespace VNPSP
 		void initOSL();
 		
 		std::deque<Scene*> sceneStack;
+		std::deque<Scene*> deadScenes;
 	};
 }
 

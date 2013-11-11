@@ -12,7 +12,8 @@
 using namespace VNPSP;
 
 App::App():
-	sceneStack()
+	sceneStack(),
+	deadScenes()
 {
 	// Init stuff...
 	this->initOSL();
@@ -136,6 +137,11 @@ void App::run()
 		// This takes care of timing and determining when to drop a frame
 		oslEndFrame();
 		lastFrameWasLate = oslSyncFrame();
+		
+		// Delete dead scenes after they are no longer needed
+		for(std::deque<Scene*>::iterator it = deadScenes.begin(); it != deadScenes.end(); it++)
+			delete *it;
+		deadScenes.clear();
 	}
 }
 
@@ -146,6 +152,6 @@ void App::push(Scene *scene)
 
 void App::pop()
 {
-	delete *(this->sceneStack.end());
+	deadScenes.push_back(this->sceneStack.end());
 	this->sceneStack.pop_back();
 }
