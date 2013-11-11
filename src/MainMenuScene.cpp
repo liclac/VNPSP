@@ -100,8 +100,8 @@ void MainMenuScene::tick()
 	if(osl_pad.pressed.cross)
 	{
 		Novel *selectedNovel = novels.at(selectedIndex);
-		GameScene *gameScene = new GameScene(m_app, selectedNovel);
-		this->m_app->push(gameScene);
+		GameScene *gameScene = new GameScene(app, selectedNovel);
+		this->app->push(gameScene);
 	}
 	else if(osl_pad.pressed.up)
 	{

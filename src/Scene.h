@@ -8,7 +8,7 @@ namespace VNPSP {
 	class Scene
 	{
 	public:
-		Scene(App *app) : m_app(app) {};
+		Scene(App *app) : app(app) {};
 		virtual ~Scene() {};
 		
 		virtual void tick() = 0;
@@ -18,7 +18,7 @@ namespace VNPSP {
 		virtual bool passthroughTick() { return false; }
 		
 	protected:
-		App *m_app;
+		App *app;
 	};
 }
 
