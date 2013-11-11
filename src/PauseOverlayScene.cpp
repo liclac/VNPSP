@@ -1,4 +1,5 @@
 #include "PauseOverlayScene.h"
+#include <iostream>
 #include "common.h"
 #include "App.h"
 
@@ -24,6 +25,21 @@ void PauseOverlayScene::tick()
 	
 	if(osl_pad.pressed.start)
 		this->app->pop();
+	else if(osl_pad.pressed.cross)
+	{
+		switch((Option)selection)
+		{
+			case OptionContinue:
+				this->app->pop();
+				break;
+			case OptionSave:
+			case OptionLoad:
+			case OptionQuit:
+			default:
+				std::cerr << "Unknown Option Selected! " << selection << std::endl;
+				break;
+		}
+	}
 }
 
 void PauseOverlayScene::draw()
