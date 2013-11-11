@@ -35,6 +35,8 @@ void PauseOverlayScene::tick()
 			case OptionSave:
 			case OptionLoad:
 			case OptionQuit:
+				this->app->reset();
+				break;
 			default:
 				std::cerr << "Unknown Option Selected! " << selection << std::endl;
 				break;

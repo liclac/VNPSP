@@ -1,4 +1,5 @@
 #include "App.h"
+#include <iostream>
 #include <string>
 #include <deque>
 #include <sstream>
@@ -19,8 +20,7 @@ App::App():
 	this->initOSL();
 	
 	// Load the Main Menu screen
-	MainMenuScene *mainMenu = new MainMenuScene(this);
-	this->push(mainMenu);
+	this->push(new MainMenuScene(this));
 }
 
 App::~App()
@@ -152,6 +152,18 @@ void App::push(Scene *scene)
 
 void App::pop()
 {
-	deadScenes.push_back(*this->sceneStack.end());
+	this->deadScenes.push_back(*this->sceneStack.end());
 	this->sceneStack.pop_back();
+}
+
+void App::reset()
+{
+	std::cout << "Resetting..." << std::endl;
+	this->deadScenes.insert(this->deadScenes.end(), this->sceneStack.begin(), this->sceneStack.end());
+	this->sceneStack.clear();
+	
+	std::cout << "Creating new Main Menu..." << std::endl;
+	this->push(new MainMenuScene(this));
+	
+	std::cout << "Done!" << std::endl;
 }

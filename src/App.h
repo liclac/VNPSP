@@ -19,6 +19,7 @@ namespace VNPSP
 		void run();
 		void push(Scene *scene);
 		void pop();
+		void reset();
 		
 	protected:
 		void initOSL();
