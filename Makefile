@@ -1,7 +1,8 @@
 TARGET = vnpsp
 OBJS   = src/main.o src/App.o src/Scene.o src/Novel.o \
 			src/Script.o src/Command.o \
-			src/MainMenuScene.o src/GameScene.o
+			src/MainMenuScene.o src/GameScene.o \
+			src/PauseOverlayScene.o
 
 INCDIR   = lib
 CFLAGS   = -G0 -Wall -O2 -ggdb

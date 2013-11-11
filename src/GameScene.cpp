@@ -2,6 +2,8 @@
 #include <sstream>
 #include <cstring>
 #include "common.h"
+#include "App.h"
+#include "PauseOverlayScene.h"
 
 #define kTextBoxPadding 10
 #define kTextBoxLineMargin 2
@@ -24,7 +26,6 @@ GameScene::GameScene(App *app, Novel *novel):
 	// Load the text font
 	textFont = oslLoadFontFile(FONT_PATH_SMALL_SANS);
 	//oslIntraFontSetStyle(textFont, 1, RGBA(255,255,255,255), RGBA(0,0,0,0), INTRAFONT_ALIGN_LEFT);
-	oslSetFont(textFont);
 	
 	// Load the main script
 	script = new Script(novel, "main.scr");
@@ -43,10 +44,15 @@ void GameScene::tick()
 {
 	if(osl_pad.pressed.cross)
 		script->next();
+	if(osl_pad.pressed.start)
+		this->app->push(new PauseOverlayScene(this->app));
 }
 
 void GameScene::draw()
 {
+	// -- Set the font to play nice with overlays
+	oslSetFont(textFont);
+	
 	// -- Background
 	if(background)
 		oslDrawImage(background);
