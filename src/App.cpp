@@ -152,6 +152,6 @@ void App::push(Scene *scene)
 
 void App::pop()
 {
-	deadScenes.push_back(this->sceneStack.end());
+	deadScenes.push_back(*this->sceneStack.end());
 	this->sceneStack.pop_back();
 }
