@@ -22,7 +22,7 @@ void PauseOverlayScene::tick()
 	if(osl_pad.pressed.down && selection < _OptionCount-1)
 		++selection;
 	
-	if(osl_pad.pressed.start || osl_pad.pressed.circle)
+	if(osl_pad.pressed.start)
 		this->app->pop();
 }
 
