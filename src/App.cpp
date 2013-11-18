@@ -77,15 +77,15 @@ void App::run()
 		// -- Update Phase
 		// 
 		
-		// Check the controller for new inputs; this updates osl_pad
-		oslReadKeys();
-		
 		std::deque<Scene*> scenesToDraw;
 		do
 		{
 			// Reset stuff
 			restartUpdatePhase = false;
 			scenesToDraw.clear();
+			
+			// Check the controller for new inputs; this updates osl_pad
+			oslReadKeys();
 			
 			// Loop through the scene stack backwards to update them and add them
 			// to a list of things to draw during the draw phase. Scenes can allow
@@ -161,12 +161,14 @@ void App::run()
 void App::push(Scene *scene)
 {
 	this->sceneStack.push_back(scene);
+	restartUpdatePhase = true;
 }
 
 void App::pop()
 {
 	this->deadScenes.push_back(this->sceneStack.back());
 	this->sceneStack.pop_back();
+	restartUpdatePhase = true;
 }
 
 void App::reset()
