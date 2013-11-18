@@ -10,6 +10,8 @@
 #include "Novel.h"
 #include "MainMenuScene.h"
 
+bool restartUpdatePhase = false;
+
 using namespace VNPSP;
 
 App::App():
@@ -78,38 +80,50 @@ void App::run()
 		// Check the controller for new inputs; this updates osl_pad
 		oslReadKeys();
 		
-		// Loop through the scene stack backwards to update them and add them
-		// to a list of things to draw during the draw phase. Scenes can allow
-		// passthrough of draw and/or tick to ones below it in the stack, to
-		// allow for semi/transparent overlays with or without their own logic.
-		// Note: for performance, tick() calls are done top-down, while draw()
-		// calls are done bottom-up, otherwise overlays would be drawn over.
 		std::deque<Scene*> scenesToDraw;
-		bool tickStopHit = false;
-		bool drawStopHit = false;
-		for(unsigned int i = sceneStack.size() - 1; i >= 0; i--)
+		do
 		{
-			Scene *scene = sceneStack.at(i);
-
-			// tick() scenes until we find one that won't allow passthrough
-			if(!tickStopHit)
-			{
-				scene->tick();
-				tickStopHit = !scene->passthroughTick();
-			}
+			// Reset stuff
+			restartUpdatePhase = false;
+			scenesToDraw.clear();
 			
-			// Add to the front of the visible stack, since we're iterating backwards here,
-			// but forward during the draw phase (otherwise overlays would be drawn under things)
-			if(!drawStopHit)
+			// Loop through the scene stack backwards to update them and add them
+			// to a list of things to draw during the draw phase. Scenes can allow
+			// passthrough of draw and/or tick to ones below it in the stack, to
+			// allow for semi/transparent overlays with or without their own logic.
+			// Note: for performance, tick() calls are done top-down, while draw()
+			// calls are done bottom-up, otherwise overlays would be drawn over.
+			bool tickStopHit = false;
+			bool drawStopHit = false;
+			for(unsigned int i = sceneStack.size() - 1; i >= 0; i--)
 			{
-				scenesToDraw.push_front(scene);
-				drawStopHit = !scene->passthroughDraw();
-			}
+				Scene *scene = sceneStack.at(i);
 
-			// No point in continuing if we've already hit both stops
-			if(tickStopHit && drawStopHit)
-				break;
-		}
+				// tick() scenes until we find one that won't allow passthrough
+				if(!tickStopHit)
+				{
+					scene->tick();
+					tickStopHit = !scene->passthroughTick();
+				}
+				
+				// If the last update phase caused a reset of some kind, restart
+				// the update phase to account for it.
+				if(restartUpdatePhase)
+					break;
+				
+				// Add to the front of the visible stack, since we're iterating backwards here,
+				// but forward during the draw phase (otherwise overlays would be drawn under things)
+				if(!drawStopHit)
+				{
+					scenesToDraw.push_front(scene);
+					drawStopHit = !scene->passthroughDraw();
+				}
+				
+				// No point in continuing if we've already hit both stops
+				if(tickStopHit && drawStopHit)
+					break;
+			}
+		} while(restartUpdatePhase);
 		
 		
 		
@@ -138,6 +152,8 @@ void App::run()
 		oslEndFrame();
 		lastFrameWasLate = oslSyncFrame();
 		
+		
+		
 		// Delete dead scenes after they are no longer needed
 		for(std::deque<Scene*>::iterator it = deadScenes.begin(); it != deadScenes.end(); it++)
 			delete *it;
@@ -164,6 +180,9 @@ void App::reset()
 	
 	std::cout << "Creating new Main Menu..." << std::endl;
 	this->push(new MainMenuScene(this));
+	
+	std::cout << "Marking update phase for repetition.." << std::endl;
+	restartUpdatePhase = true;
 	
 	std::cout << "Done!" << std::endl;
 }
