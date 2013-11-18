@@ -95,9 +95,9 @@ void App::run()
 			// calls are done bottom-up, otherwise overlays would be drawn over.
 			bool tickStopHit = false;
 			bool drawStopHit = false;
-			for(unsigned int i = sceneStack.size() - 1; i >= 0; i--)
+			for(std::deque<Scene*>::reverse_iterator it = sceneStack.rbegin(); it != sceneStack.rend(); it++)
 			{
-				Scene *scene = sceneStack.at(i);
+				Scene *scene = *it;
 
 				// tick() scenes until we find one that won't allow passthrough
 				if(!tickStopHit)
@@ -139,11 +139,8 @@ void App::run()
 			
 			// This time, loop through the array of visible scenes we determined during the
 			// update phase, and forward this time.
-			for(unsigned int i = 0; i < scenesToDraw.size(); i++)
-			{
-				Scene *scene = scenesToDraw.at(i);
-				scene->draw();
-			}
+			for(std::deque<Scene*>::iterator it = scenesToDraw.begin(); it != scenesToDraw.end(); it++)
+				(*it)->draw();
 			
 			oslEndDrawing();
 		}
@@ -168,7 +165,7 @@ void App::push(Scene *scene)
 
 void App::pop()
 {
-	this->deadScenes.push_back(*this->sceneStack.end());
+	this->deadScenes.push_back(this->sceneStack.back());
 	this->sceneStack.pop_back();
 }
 

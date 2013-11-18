@@ -42,8 +42,6 @@ void PauseOverlayScene::tick()
 				break;
 		}
 	}
-	
-	std::cout << "end PauseOverlayScene::tick()" << std::endl;
 }
 
 void PauseOverlayScene::draw()
