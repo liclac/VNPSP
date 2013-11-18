@@ -42,7 +42,7 @@ void Script::next(bool skipping)
 			break;
 		}
 		
-		std::cout << "-- Executing Command " << pos << " of " <<
+		std::cout << "-- Executing Command " << pos+1 << " of " <<
 						commands.size() << "..." << std::endl;
 		
 		// Check the current tick when we started to measure duration
