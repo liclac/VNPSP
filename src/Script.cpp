@@ -55,7 +55,7 @@ void Script::next(bool skipping)
 		++pos;
 		
 		// Check again and compare to get the duration
-		// Scale is 10^-6
+		// Scale is 10^-6sec = microseconds
 		u64 tick2;
 		sceRtcGetCurrentTick(&tick2);
 		std::cout << "   - " << (tick2 - tick1) << " ticks" << std::endl;
@@ -84,6 +84,8 @@ void Script::load(std::string filename)
 		{
 			commands.push_back(new NOOPCommand(this));
 		}
+		// Only do all this for actual commands - check the command, and push a
+		// concrete representation of it onto the stack
 		else
 		{
 			// Figure out how long the command is, and what it is
