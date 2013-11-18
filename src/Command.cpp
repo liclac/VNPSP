@@ -29,6 +29,13 @@ bool UnknownCommand::exec(bool skipping)
 }
 
 // 
+// -- NOOP
+// 
+NOOPCommand::NOOPCommand(Script *script): Command(script, NULL) { }
+NOOPCommand::~NOOPCommand() { }
+bool NOOPCommand::exec(bool skipping) { return true; }
+
+// 
 // -- Text
 // 
 TextCommand::TextCommand(Script *script, char *remainingLine):

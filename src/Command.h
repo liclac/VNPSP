@@ -46,6 +46,15 @@ namespace VNPSP
 		std::string line;		///< The unrecognized line
 	};
 	
+	/// Concrete representation of a NOOP command, eg. a blank line
+	class NOOPCommand : public Command
+	{
+	public:
+		NOOPCommand(Script *script);
+		virtual ~NOOPCommand();
+		virtual bool exec(bool skipping);
+	};
+	
 	/// Concrete representation of the 'text' command.
 	class TextCommand : public Command
 	{

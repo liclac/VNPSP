@@ -3,6 +3,8 @@
 #include <fstream>
 #include <cstdio>
 #include <cstdlib>
+#include <psptypes.h>
+#include <psprtc.h>
 #include "GameScene.h"
 #include "Novel.h"
 #include "Command.h"
@@ -43,10 +45,20 @@ void Script::next(bool skipping)
 		std::cout << "-- Executing Command " << pos << " of " <<
 						commands.size() << "..." << std::endl;
 		
+		// Check the current tick when we started to measure duration
+		u64 tick1;
+		sceRtcGetCurrentTick(&tick1);
+		
 		// Retrieve and execute the next command
 		Command *cmd = commands.at(pos);
 		cont = cmd->exec(skipping);
 		++pos;
+		
+		// Check again and compare to get the duration
+		// Scale is 10^-6
+		u64 tick2;
+		sceRtcGetCurrentTick(&tick2);
+		std::cout << "   - " << (tick2 - tick1) << " ticks" << std::endl;
 	}
 	while(cont);
 }
@@ -64,26 +76,34 @@ void Script::load(std::string filename)
 	{
 		char *cLine = strdup(line.c_str());
 		
-		// Skip empty lines and comments
+		// Push no-op commands for empty lines and comments
+		// If we just ignore them, command numbers will no longer equal to
+		// line numbers, which will make debugging harder, as we don't store
+		// the line text to save memory, and can't use RTI.
 		if(strlen(cLine) == 0 || cLine[0] == '#')
-			continue;
-		
-		// Figure out how long the command is, and what it is
-		char *pbrk = strpbrk(cLine, " \t\r");
-		size_t cmdLength = (pbrk != NULL ? pbrk - cLine : strlen(cLine));
-		char *remaining = cLine + (pbrk != NULL ? cmdLength + 1 : 0);
-		
-		// Create a command object for each command we pass
-		if(strncmp("text", cLine, cmdLength) == 0)
-			commands.push_back(new TextCommand(this, remaining));
-		else if(strncmp("cleartext", cLine, cmdLength) == 0)
-			commands.push_back(new ClearTextCommand(this, remaining));
-		else if(strncmp("bgload", cLine, cmdLength) == 0)
-			commands.push_back(new BgLoadCommand(this, remaining));
-		// If we can't match it, make an UnknownCommand placeholder
+		{
+			commands.push_back(new NOOPCommand(this));
+		}
 		else
-			commands.push_back(new UnknownCommand(this, cLine));
-		
-		free(cLine);
+		{
+			// Figure out how long the command is, and what it is
+			char *pbrk = strpbrk(cLine, " \t\r");
+			size_t cmdLength = (pbrk != NULL ? pbrk - cLine : strlen(cLine));
+			char *remaining = cLine + (pbrk != NULL ? cmdLength + 1 : 0);
+			
+			// Create a command object for each command we pass
+			if(strncmp("text", cLine, cmdLength) == 0)
+				commands.push_back(new TextCommand(this, remaining));
+			else if(strncmp("cleartext", cLine, cmdLength) == 0)
+				commands.push_back(new ClearTextCommand(this, remaining));
+			else if(strncmp("bgload", cLine, cmdLength) == 0)
+				commands.push_back(new BgLoadCommand(this, remaining));
+			
+			// If we can't match it, make an UnknownCommand placeholder
+			else
+				commands.push_back(new UnknownCommand(this, cLine));
+			
+			free(cLine);
+		}
 	}
 }
