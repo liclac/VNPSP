@@ -13,8 +13,8 @@
 /*
  * -- Hardware Info
  */
-#define SCREEN_HEIGHT 272
 #define SCREEN_WIDTH 480
+#define SCREEN_HEIGHT 272
 
 /*
  * -- Font Paths
@@ -38,5 +38,11 @@
 #define FONT_PATH_SMALL_SERIF_B "flash0:/font/ltn13.pgf"
 #define FONT_PATH_SMALL_SANS_BI "flash0:/font/ltn14.pgf"
 #define FONT_PATH_SMALL_SERIF_BI "flash0:/font/ltn15.pgf"
+
+/*
+ * -- DS Info
+ */
+#define DS_SCREEN_WIDTH 256
+#define DS_SCREEN_HEIGHT 192
 
 #endif
