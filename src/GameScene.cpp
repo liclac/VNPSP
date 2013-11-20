@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include <iostream>
 #include <sstream>
 #include <cstring>
 #include "common.h"
@@ -21,6 +22,8 @@ using namespace VNPSP;
 GameScene::GameScene(App *app, Novel *novel):
 	Scene(app),
 	background(0),
+	scaleX(SCREEN_WIDTH/(float)DS_SCREEN_WIDTH),
+	scaleY(SCREEN_HEIGHT/(float)DS_SCREEN_HEIGHT),
 	novel(novel), script(0)
 {
 	// Load the text font
@@ -60,7 +63,8 @@ void GameScene::draw()
 		oslDrawFillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, RGB(0,0,0));
 	
 	// -- Sprites
-	
+	for(std::deque<OSL_IMAGE *>::iterator it = sprites.begin(); it != sprites.end(); it++)
+		oslDrawImage(*it);
 	
 	// -- Text
 	const int lineHeight = textFont->charHeight;
@@ -149,11 +153,12 @@ void GameScene::loadBackground(std::string filename)
 	// Load the new image (oslLoadImageFile and related take a char* instead
 	// of a const char* for some reason, so we need a writable copy)
 	char *pathDup = strdup(path.c_str());
-	OSL_IMAGE *bgSrc = oslLoadImageFile(pathDup, OSL_IN_RAM, OSL_PF_5650);
+	OSL_IMAGE *bgSrc = oslLoadImageFile(pathDup, OSL_IN_RAM|OSL_UNSWIZZLED, OSL_PF_5650);
 	
-	// Scale it up to fit the screen
-	// (I gotta figure out the scale factor too...)
-	background = oslScaleImageCreate(bgSrc, OSL_IN_VRAM, SCREEN_WIDTH, SCREEN_HEIGHT, OSL_PF_5650);
+	// Scale it up to fit the screen and figure out the scale factor
+	background = oslScaleImageCreate(bgSrc, OSL_IN_RAM|OSL_SWIZZLED, SCREEN_WIDTH, SCREEN_HEIGHT, OSL_PF_5650);
+	scaleX = bgSrc->sizeX/(float)background->sizeX;
+	scaleY = bgSrc->sizeY/(float)background->sizeY;
 	
 	// Cleanup
 	oslDeleteImage(bgSrc);
@@ -163,6 +168,37 @@ void GameScene::loadBackground(std::string filename)
 	// I should probably resize it to fit instead...
 	/*background->x = (SCREEN_WIDTH - background->sizeX)/2;
 	background->y = (SCREEN_HEIGHT - background->sizeY)/2;*/
+}
+
+OSL_IMAGE* GameScene::loadSprite(std::string filename, int origX, int origY)
+{
+	// This is basically loadBackground all over again, only with the addition
+	// of setting img->x and img->y, and pushing it onto the sprite list.
+	// Refer to loadBackground for more comments.
+	
+	std::string path = novel->pathForResource("foreground", filename);
+	
+	char *pathDup = strdup(path.c_str());
+	OSL_IMAGE *imgSrc = oslLoadImageFile(pathDup, OSL_IN_VRAM|OSL_UNSWIZZLED, OSL_PF_5551);
+	
+	OSL_IMAGE *img = oslScaleImageCreate(imgSrc, OSL_IN_VRAM|OSL_SWIZZLED, ceil((float)imgSrc->sizeX * scaleX), ceil((float)imgSrc->sizeY * scaleY), OSL_PF_5551);
+	
+	oslDeleteImage(imgSrc);
+	free(pathDup);
+	
+	// New-ish stuff
+	img->x = origX * scaleX;	// Set x position, adjust for scale
+	img->y = origY * scaleY;	// Set y position, adjust for scale
+	sprites.push_back(img);		// Push it onto the sprite list
+	
+	return img;
+}
+
+void GameScene::clearSprites()
+{
+	for(std::deque<OSL_IMAGE*>::iterator it = sprites.begin(); it != sprites.end(); it++)
+		oslDeleteImage(*it);
+	sprites.clear();
 }
 
 void GameScene::_pushLineActual(std::string text, LineType type)

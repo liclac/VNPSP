@@ -91,6 +91,19 @@ namespace VNPSP
 	protected:
 		std::string filename;	///< The filename of the image to load
 	};
+	
+	/// Concrete representation of the 'setimg' command.
+	class SetImgCommand : public Command
+	{
+	public:
+		SetImgCommand(Script *script, char *remaining);
+		virtual ~SetImgCommand();
+		virtual bool exec(bool skipping);
+		
+	protected:
+		std::string filename;
+		int xPos, yPos;
+	};
 }
 
 #endif

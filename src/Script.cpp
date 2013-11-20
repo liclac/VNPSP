@@ -100,6 +100,8 @@ void Script::load(std::string filename)
 				commands.push_back(new ClearTextCommand(this, remaining));
 			else if(strncmp("bgload", cLine, cmdLength) == 0)
 				commands.push_back(new BgLoadCommand(this, remaining));
+			else if(strncmp("setimg", cLine, cmdLength) == 0)
+				commands.push_back(new SetImgCommand(this, remaining));
 			
 			// If we can't match it, make an UnknownCommand placeholder
 			else

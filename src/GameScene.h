@@ -53,7 +53,9 @@ namespace VNPSP
 		
 		/// Loads a foreground sprite
 		/// @param filename Image filename (relative to '<novel>/foreground/')
-		OSL_IMAGE* loadSprite(std::string filename);
+		/// @param origX X Position; will be adjusted by `scaleX`
+		/// @param origY Y Position; will be adjusted by `origY`
+		OSL_IMAGE* loadSprite(std::string filename, int origX, int origY);
 		
 		/// Clears all foreground sprites
 		void clearSprites();
@@ -62,6 +64,7 @@ namespace VNPSP
 		
 		OSL_IMAGE *background;				///< Pre-placed background image
 		std::deque<OSL_IMAGE *> sprites;	///< Onscreen foreground sprites
+		float scaleX, scaleY;				///< Scale factor (for the current bg)
 		
 	protected:
 		OSL_FONT *textFont;		///< The font used for onscreen text

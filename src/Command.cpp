@@ -102,6 +102,31 @@ BgLoadCommand::~BgLoadCommand() { }
 
 bool BgLoadCommand::exec(bool skipping)
 {
+	this->script->scene->clearSprites();
 	this->script->scene->loadBackground(this->filename);
+	return true;
+}
+
+// 
+// -- SetImg
+// 
+SetImgCommand::SetImgCommand(Script *script, char *remainingLine):
+	Command(script, remainingLine)
+{
+	const char *tmp = strtok(remainingLine, " ");
+	filename = (tmp ? tmp : remainingLine);
+	
+	tmp = strtok(NULL, " ");
+	xPos = (tmp ? atoi(tmp) : 0);
+	
+	tmp = strtok(NULL, " ");
+	yPos = (tmp ? atoi(tmp) : 0);
+}
+
+SetImgCommand::~SetImgCommand() { }
+
+bool SetImgCommand::exec(bool skipping)
+{
+	this->script->scene->loadSprite(filename, xPos, yPos);
 	return true;
 }
