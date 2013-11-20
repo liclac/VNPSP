@@ -83,7 +83,8 @@ ClearTextCommand::~ClearTextCommand() { }
 
 bool ClearTextCommand::exec(bool skipping)
 {
-	this->script->scene->clearBuffer();
+	//this->script->scene->clearBuffer();
+	this->script->scene->pushLine("-- cleartext --");
 	return true;
 }
 
