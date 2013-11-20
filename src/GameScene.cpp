@@ -91,11 +91,20 @@ void GameScene::draw()
 
 void GameScene::loadScript(std::string filename)
 {
-	if(!this->script)
-		delete this->script;
+	// Replace the old script with the new one
+	if(!script)
+		delete script;
 	
 	script = new Script(novel, filename);
 	script->scene = this;
+	
+	// Clear the screen of stuff from the last script
+	if(background)
+	{
+		oslDeleteImage(background);
+		background = NULL;
+	}
+	this->clearSprites();
 }
 
 void GameScene::pushLine(std::string text, LineType type)
