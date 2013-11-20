@@ -35,6 +35,11 @@ namespace VNPSP
 		
 		
 		
+		/// Load a script, unloading the last one plus any resources
+		void loadScript(std::string filename);
+		
+		
+		
 		/// Pushes a new line onto the buffer.
 		/// This function also manages splitting of the too long lines, and
 		/// makes sure to push a Paragraph Break at the end for readability.

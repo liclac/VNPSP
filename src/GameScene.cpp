@@ -31,8 +31,7 @@ GameScene::GameScene(App *app, Novel *novel):
 	//oslIntraFontSetStyle(textFont, 1, RGBA(255,255,255,255), RGBA(0,0,0,0), INTRAFONT_ALIGN_LEFT);
 	
 	// Load the main script
-	script = new Script(novel, "main.scr");
-	script->scene = this;
+	this->loadScript("main.scr");
 	
 	// Start!
 	script->next();
@@ -88,6 +87,15 @@ void GameScene::draw()
 			oslDrawString(xPos, yPos, line.text.c_str());
 		}
 	}
+}
+
+void GameScene::loadScript(std::string filename)
+{
+	if(!this->script)
+		delete this->script;
+	
+	script = new Script(novel, filename);
+	script->scene = this;
 }
 
 void GameScene::pushLine(std::string text, LineType type)
