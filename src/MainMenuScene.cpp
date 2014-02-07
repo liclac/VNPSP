@@ -1,5 +1,6 @@
 #include "MainMenuScene.h"
 
+#include <iostream>
 #include <sstream>
 #include <pspiofilemgr.h>
 
@@ -63,8 +64,9 @@ void MainMenuScene::loadNovels()
 		// Just like sceIoDread, this fails if you don't zero out the out struct.
 		SceIoStat stat;
 		memset(&stat, 0, sizeof(stat));
-		if(sceIoGetstat((path + std::string("/index.txt")).c_str(), &stat))
+		if(sceIoGetstat((path + std::string("/info.txt")).c_str(), &stat))
 		{
+			std::cout << "Adding:" << path << std::endl;
 			Novel *novel = new Novel(path);
 			this->novels.push_back(novel);
 		}
@@ -132,6 +134,8 @@ void MainMenuScene::draw()
 		static const int yCenter = (SCREEN_HEIGHT - MAIN_MENU_ROW_HEIGHT)/2;
 		static const int rowOffset = (MAIN_MENU_ROW_HEIGHT + MAIN_MENU_ROW_MARGIN);
 		
+		
+		
 		// Previous novels...
 		if(selectedIndex >= 2)
 			this->drawListItem(leftMargin, yCenter - rowOffset*2, novels[selectedIndex-2], false);
@@ -151,12 +155,18 @@ void MainMenuScene::draw()
 
 void MainMenuScene::drawListItem(int x, int y, Novel *novel, bool selected)
 {
-	// Draw a black square instead of the thumbnail until I figure
-	// out why libpng refuses to load them...
-	//oslDrawFillRect(x, y, x + MAIN_MENU_IMAGE_WIDTH, y + MAIN_MENU_ROW_HEIGHT, RGB(0,0,0));
+	// Ignore NULLs, it's easier than trying to bounds check above
+	// Yes, I'm that lazy. Shoot me.
+	if(!novel)
+		return;
 	
 	// TODO: Scale incorrectly sized images
-	oslDrawImageXY(novel->thumbnail(), x, y);
+	// Draw a thumbnail if available, otherwise a black square
+	OSL_IMAGE *thumb = novel->thumbnail();
+	if(thumb)
+		oslDrawImageXY(thumb, x, y);
+	else
+		oslDrawFillRect(x, y, x + MAIN_MENU_IMAGE_WIDTH, y + MAIN_MENU_ROW_HEIGHT, RGB(0,0,0));
 	
 	// And draw the title alongside it; the XMB only draws it on the
 	// selected title, but drawing it everywhere looks better IMO.
