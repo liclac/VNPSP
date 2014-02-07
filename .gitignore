@@ -1,11 +1,16 @@
+# System Files
 .DS_Store
 ._*
 
+# Built Products
 *.o
 *.elf
 *.SFO
 *.PBP
 *.prx
+
+# User Files
 *.sublime-project
 *.sublime-workspace
+/novels/
 

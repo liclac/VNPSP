@@ -8,7 +8,7 @@
 #define VERSION_MAJOR 0		//< Major Version
 #define VERSION_MINOR 1		//< Minor Version
 
-#define NOVELS_PATH "ms0:/novels/"
+#define NOVELS_PATH "novels"
 
 /*
  * -- Hardware Info
