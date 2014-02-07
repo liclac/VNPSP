@@ -34,6 +34,7 @@ void MainMenuScene::loadNovels()
 {
 	// Open the novel directory for reading...
 	std::string novelsPath = NOVELS_PATH;
+	std::cout << "Scanning " << novelsPath << " for novels" << std::endl;
 	SceUID dfd = sceIoDopen(novelsPath.c_str());
 	
 	// Create a zeroed reserved space for entries.
@@ -64,12 +65,12 @@ void MainMenuScene::loadNovels()
 		// Just like sceIoDread, this fails if you don't zero out the out struct.
 		SceIoStat stat;
 		memset(&stat, 0, sizeof(stat));
-		if(sceIoGetstat((path + std::string("/info.txt")).c_str(), &stat))
+		if(sceIoGetstat((path + std::string("/info.txt")).c_str(), &stat) >= 0)
 		{
-			std::cout << "Adding:" << path << std::endl;
+			std::cout << "Adding: " << path << std::endl;
 			Novel *novel = new Novel(path);
 			this->novels.push_back(novel);
-		}
+		} else std::cout << path << " doesn't contain an info.txt file" << std::endl;
 		
 		// Break when we run out of file entries
 		if(status == 0)
